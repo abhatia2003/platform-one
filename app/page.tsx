@@ -1,365 +1,212 @@
-import Link from "next/link";
+"use client";
+
+import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Calendar,
+  ShieldCheck,
   Users,
-  MessageSquare,
-  Clock,
-  CheckCircle,
-  Zap,
+  ArrowRight,
+  Mail,
+  Lock,
+  KeyRound,
+  Sparkles,
 } from "lucide-react";
 
-export default function LandingPage() {
+const roles = [
+  {
+    id: "participant",
+    title: "Participant",
+    description: "Book sessions, track schedules, and stay in the loop.",
+    accent: "from-orange-400 via-red-400 to-pink-500",
+    icon: Users,
+  },
+  {
+    id: "staff",
+    title: "Staff",
+    description: "Approve requests, manage calendars, and message teams.",
+    accent: "from-emerald-400 via-teal-400 to-cyan-500",
+    icon: ShieldCheck,
+  },
+] as const;
+
+type RoleId = (typeof roles)[number]["id"];
+
+export default function LoginPage() {
+  const router = useRouter();
+  const [role, setRole] = useState<RoleId>("participant");
+
+  const selectedRole = useMemo(
+    () => roles.find((item) => item.id === role),
+    [role]
+  );
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    router.push(role === "staff" ? "/staff" : "/calendar");
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Navigation */}
-      <nav className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
-                <Calendar className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-bold text-gray-900">
+    <div className="relative min-h-screen overflow-hidden bg-slate-950 text-white">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-20 right-10 h-64 w-64 rounded-full bg-amber-400/20 blur-3xl" />
+        <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-cyan-400/20 blur-3xl" />
+        <div className="absolute left-1/3 top-1/3 h-80 w-80 rounded-full bg-pink-500/10 blur-[140px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),_transparent_55%)]" />
+      </div>
+
+      <div className="relative mx-auto flex min-h-screen max-w-6xl flex-col px-6 py-10 lg:flex-row lg:items-center lg:gap-16 lg:px-10">
+        <div className="flex-1 space-y-8">
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/20">
+              <Calendar className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <p className="text-xs uppercase tracking-[0.4em] text-white/70">
                 PlatformOne
-              </span>
-            </div>
-
-            <div className="hidden md:flex items-center gap-8">
-              <Link
-                href="#features"
-                className="text-gray-600 hover:text-gray-900 font-medium transition-colors"
-              >
-                Features
-              </Link>
-              <Link
-                href="#how-it-works"
-                className="text-gray-600 hover:text-gray-900 font-medium transition-colors"
-              >
-                How it works
-              </Link>
-              <Link
-                href="#about"
-                className="text-gray-600 hover:text-gray-900 font-medium transition-colors"
-              >
-                About
-              </Link>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <Link
-                href="/calendar"
-                className="px-5 py-2 text-gray-600 hover:text-gray-900 font-semibold transition-colors"
-              >
-                Log in
-              </Link>
-              <Link
-                href="/calendar"
-                className="px-5 py-2 bg-red-500 text-white rounded-lg font-semibold hover:bg-red-600 transition-colors"
-              >
-                Get Started
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      {/* Hero Section */}
-      <section className="max-w-7xl mx-auto px-6 lg:px-12 py-20 lg:py-32">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left Content */}
-          <div className="space-y-8">
-            <div className="inline-block">
-              <span className="px-4 py-2 bg-orange-100 text-orange-700 rounded-full text-sm font-semibold">
-                Event Management Made Simple
-              </span>
-            </div>
-
-            <h1 className="text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 leading-tight">
-              Consolidate All Your <span className="text-red-500">Events</span>{" "}
-              in One Place
-            </h1>
-
-            <p className="text-xl text-gray-600 leading-relaxed">
-              Streamline event coordination for volunteers, participants, and
-              staff. Manage bookings, schedules, and communications seamlessly
-              across your organization.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Link
-                href="/calendar"
-                className="px-8 py-4 bg-red-500 text-white rounded-lg font-bold text-lg hover:bg-red-600 transition-colors text-center"
-              >
-                Start Organizing
-              </Link>
-              <Link
-                href="#how-it-works"
-                className="px-8 py-4 border-2 border-gray-300 text-gray-700 rounded-lg font-bold text-lg hover:border-gray-400 transition-colors text-center"
-              >
-                See How It Works
-              </Link>
-            </div>
-
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-6 pt-8 border-t border-gray-200">
-              <div>
-                <div className="text-3xl font-bold text-gray-900">500+</div>
-                <div className="text-sm text-gray-600 font-medium">
-                  Organizations
-                </div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-gray-900">15K+</div>
-                <div className="text-sm text-gray-600 font-medium">
-                  Events Managed
-                </div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-gray-900">50K+</div>
-                <div className="text-sm text-gray-600 font-medium">
-                  Active Users
-                </div>
-              </div>
+              </p>
+              <h1 className="text-2xl font-semibold">Unified Access</h1>
             </div>
           </div>
 
-          {/* Right Visual */}
-          <div className="relative hidden lg:block">
-            <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8">
-              {/* Mini Calendar Preview */}
-              <div className="space-y-4">
-                <div className="flex items-center justify-between pb-4 border-b border-gray-200">
-                  <h3 className="font-bold text-lg text-gray-900">
-                    Upcoming Events
-                  </h3>
-                  <span className="text-sm text-gray-500">January 2025</span>
-                </div>
-
-                {/* Sample Events */}
-                <div className="space-y-3">
-                  <div className="flex items-start gap-3 p-3 bg-orange-50 border border-orange-200 rounded-lg">
-                    <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center shrink-0">
-                      <span className="text-white font-bold text-sm">06</span>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-gray-900 text-sm">
-                        Workshop Session
-                      </div>
-                      <div className="text-xs text-gray-600">
-                        10:00 AM - 2:00 PM
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                    <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center shrink-0">
-                      <span className="text-white font-bold text-sm">13</span>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-gray-900 text-sm">
-                        Volunteer Orientation
-                      </div>
-                      <div className="text-xs text-gray-600">
-                        9:00 AM - 11:00 AM
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3 p-3 bg-green-50 border border-green-200 rounded-lg">
-                    <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center shrink-0">
-                      <span className="text-white font-bold text-sm">21</span>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-gray-900 text-sm">
-                        Community Meetup
-                      </div>
-                      <div className="text-xs text-gray-600">
-                        3:00 PM - 5:00 PM
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3 p-3 bg-purple-50 border border-purple-200 rounded-lg">
-                    <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center shrink-0">
-                      <span className="text-white font-bold text-sm">25</span>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-gray-900 text-sm">
-                        Staff Training
-                      </div>
-                      <div className="text-xs text-gray-600">
-                        1:00 PM - 4:00 PM
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section
-        id="features"
-        className="bg-white border-y border-gray-200 py-20"
-      >
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-              Everything You Need to Manage Events
+          <div className="space-y-4">
+            <h2 className="text-4xl font-semibold leading-tight sm:text-5xl">
+              Sign in to the right space, every time.
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Built specifically for organizations coordinating volunteers,
-              participants, and staff
+            <p className="max-w-xl text-lg text-white/70">
+              Choose your role to personalize your workspace. Participants stay
+              on track; staff keep everything moving.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Feature 1 */}
-            <div className="bg-gray-50 p-8 rounded-xl border border-gray-200 hover:border-orange-300 transition-colors">
-              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
-                <Calendar className="w-6 h-6 text-orange-600" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
-                Unified Calendar
-              </h3>
-              <p className="text-gray-600 leading-relaxed">
-                View all events, workshops, and meetings in one central
-                calendar. Never miss an important date.
-              </p>
-            </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {roles.map((item) => {
+              const Icon = item.icon;
+              const isActive = role === item.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => setRole(item.id)}
+                  aria-pressed={isActive}
+                  className={`group relative overflow-hidden rounded-2xl border px-5 py-6 text-left transition ${
+                    isActive
+                      ? "border-white/30 bg-white/10 shadow-xl"
+                      : "border-white/10 bg-white/5 hover:border-white/20"
+                  }`}
+                >
+                  <div
+                    className={`absolute inset-0 opacity-0 transition group-hover:opacity-60 ${
+                      isActive ? "opacity-80" : ""
+                    }`}
+                  >
+                    <div
+                      className={`absolute inset-0 bg-gradient-to-br ${item.accent} opacity-30`}
+                    />
+                  </div>
+                  <div className="relative space-y-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <p className="text-lg font-semibold">{item.title}</p>
+                      <p className="text-sm text-white/70">
+                        {item.description}
+                      </p>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
 
-            {/* Feature 2 */}
-            <div className="bg-gray-50 p-8 rounded-xl border border-gray-200 hover:border-blue-300 transition-colors">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                <Users className="w-6 h-6 text-blue-600" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
-                Multi-Role Management
-              </h3>
-              <p className="text-gray-600 leading-relaxed">
-                Separate views and permissions for volunteers, participants, and
-                staff members.
-              </p>
-            </div>
-
-            {/* Feature 3 */}
-            <div className="bg-gray-50 p-8 rounded-xl border border-gray-200 hover:border-green-300 transition-colors">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                <CheckCircle className="w-6 h-6 text-green-600" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
-                Easy Booking
-              </h3>
-              <p className="text-gray-600 leading-relaxed">
-                Streamline event registration and booking process for all
-                participants.
-              </p>
-            </div>
-
-            {/* Feature 4 */}
-            <div className="bg-gray-50 p-8 rounded-xl border border-gray-200 hover:border-purple-300 transition-colors">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                <MessageSquare className="w-6 h-6 text-purple-600" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
-                Team Communication
-              </h3>
-              <p className="text-gray-600 leading-relaxed">
-                Keep everyone connected with integrated messaging for all
-                stakeholders.
-              </p>
-            </div>
-
-            {/* Feature 5 */}
-            <div className="bg-gray-50 p-8 rounded-xl border border-gray-200 hover:border-orange-300 transition-colors">
-              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
-                <Clock className="w-6 h-6 text-orange-600" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
-                Time Tracking
-              </h3>
-              <p className="text-gray-600 leading-relaxed">
-                Monitor volunteer hours and staff time with built-in tracking
-                tools.
-              </p>
-            </div>
-
-            {/* Feature 6 */}
-            <div className="bg-gray-50 p-8 rounded-xl border border-gray-200 hover:border-red-300 transition-colors">
-              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
-                <Zap className="w-6 h-6 text-red-600" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
-                Real-time Updates
-              </h3>
-              <p className="text-gray-600 leading-relaxed">
-                Instant notifications for schedule changes, new events, and
-                important updates.
-              </p>
-            </div>
+          <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/70">
+            <Sparkles className="h-4 w-4 text-amber-300" />
+            <span>
+              First time? Ask your coordinator for the participant link or a
+              staff invite code.
+            </span>
           </div>
         </div>
-      </section>
 
-      {/* CTA Section */}
-      <section className="max-w-7xl mx-auto px-6 lg:px-12 py-20">
-        <div className="bg-gradient-to-br from-red-500 to-orange-500 rounded-3xl p-12 lg:p-16 text-center">
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-            Ready to Transform Your Event Management?
-          </h2>
-          <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Join hundreds of organizations already using PlatformOne to
-            coordinate their events seamlessly.
-          </p>
-          <Link
-            href="/calendar"
-            className="inline-block px-8 py-4 bg-white text-red-600 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors"
-          >
-            Get Started Free
-          </Link>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 py-12">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
-                <Calendar className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-lg font-bold text-gray-900">
-                PlatformOne
-              </span>
-            </div>
-            <p className="text-gray-600 text-sm">
-              © 2025 PlatformOne. All rights reserved.
+        <div className="mt-10 w-full max-w-md rounded-3xl border border-white/10 bg-white/10 p-8 shadow-2xl backdrop-blur-lg lg:mt-0">
+          <div className="space-y-2">
+            <p className="text-xs uppercase tracking-[0.3em] text-white/60">
+              Log in
             </p>
-            <div className="flex gap-6">
-              <Link
-                href="#"
-                className="text-gray-600 hover:text-gray-900 text-sm font-medium"
-              >
-                Privacy
-              </Link>
-              <Link
-                href="#"
-                className="text-gray-600 hover:text-gray-900 text-sm font-medium"
-              >
-                Terms
-              </Link>
-              <Link
-                href="#"
-                className="text-gray-600 hover:text-gray-900 text-sm font-medium"
-              >
-                Contact
-              </Link>
-            </div>
+            <h3 className="text-2xl font-semibold">
+              {selectedRole?.title} access
+            </h3>
+          </div>
+
+          <form className="mt-6 space-y-5" onSubmit={handleSubmit}>
+            <label className="block text-sm font-medium text-white/80">
+              Email address
+              <div className="mt-2 flex items-center gap-2 rounded-xl border border-white/10 bg-slate-950/40 px-3 py-2">
+                <Mail className="h-4 w-4 text-white/50" />
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="you@organization.org"
+                  autoComplete="email"
+                  className="w-full bg-transparent text-sm text-white placeholder:text-white/40 focus:outline-none"
+                  required
+                />
+              </div>
+            </label>
+
+            <label className="block text-sm font-medium text-white/80">
+              Password
+              <div className="mt-2 flex items-center gap-2 rounded-xl border border-white/10 bg-slate-950/40 px-3 py-2">
+                <Lock className="h-4 w-4 text-white/50" />
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="••••••••"
+                  autoComplete="current-password"
+                  className="w-full bg-transparent text-sm text-white placeholder:text-white/40 focus:outline-none"
+                  required
+                />
+              </div>
+            </label>
+
+            {role === "staff" && (
+              <label className="block text-sm font-medium text-white/80">
+                Staff access code
+                <div className="mt-2 flex items-center gap-2 rounded-xl border border-white/10 bg-slate-950/40 px-3 py-2">
+                  <KeyRound className="h-4 w-4 text-white/50" />
+                  <input
+                    type="text"
+                    name="accessCode"
+                    placeholder="STAFF-2025"
+                    className="w-full bg-transparent text-sm text-white placeholder:text-white/40 focus:outline-none"
+                  />
+                </div>
+              </label>
+            )}
+
+            <button
+              type="submit"
+              className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-white/90"
+            >
+              Continue as {selectedRole?.title}
+              <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+            </button>
+          </form>
+
+          <div className="mt-6 flex flex-col gap-3 text-sm text-white/70 sm:flex-row sm:items-center sm:justify-between">
+            <button type="button" className="text-left hover:text-white">
+              Forgot password?
+            </button>
+            <button
+              type="button"
+              className="rounded-full border border-white/10 px-4 py-2 text-xs uppercase tracking-[0.2em] text-white/70 hover:text-white"
+            >
+              Need help?
+            </button>
           </div>
         </div>
-      </footer>
+      </div>
     </div>
   );
 }

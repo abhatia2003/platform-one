@@ -13,27 +13,134 @@ import {
   Calendar,
   MessageSquare,
   ChevronDown,
+  X,
+  MapPin,
+  Clock,
+  ChevronRight as ArrowRight,
 } from "lucide-react";
 
 type Event = {
   id: number;
   title: string;
   date: number;
+  start: Date;
+  end: Date;
+  location: string;
+  createdBy: string;
   category: "workshops" | "counseling" | "community" | "volunteering";
 };
 
 const events: Event[] = [
-  { id: 1, title: "Call with Coord.", date: 6, category: "workshops" },
-  { id: 2, title: "Community Park", date: 8, category: "community" },
-  { id: 3, title: "Counseling Session", date: 13, category: "counseling" },
-  { id: 4, title: "Orientation Hub", date: 14, category: "workshops" },
-  { id: 5, title: "Layout Review", date: 16, category: "workshops" },
-  { id: 6, title: "Service Layout", date: 21, category: "community" },
-  { id: 7, title: "Participant Orientation", date: 23, category: "counseling" },
-  { id: 8, title: "Volunteering", date: 23, category: "volunteering" },
-  { id: 9, title: "Weekend Workshop", date: 25, category: "workshops" },
-  { id: 10, title: "Mentorship Call", date: 28, category: "counseling" },
-  { id: 11, title: "Staff Meeting", date: 31, category: "community" },
+  {
+    id: 1,
+    title: "Call with Coord.",
+    date: 6,
+    start: new Date(2025, 0, 6, 10, 0),
+    end: new Date(2025, 0, 6, 11, 30),
+    location: "Conference Room A",
+    createdBy: "Sarah Johnson",
+    category: "workshops",
+  },
+  {
+    id: 2,
+    title: "Community Park",
+    date: 8,
+    start: new Date(2025, 0, 8, 14, 0),
+    end: new Date(2025, 0, 8, 16, 0),
+    location: "Central Park",
+    createdBy: "Michael Chen",
+    category: "community",
+  },
+  {
+    id: 3,
+    title: "Counseling Session",
+    date: 13,
+    start: new Date(2025, 0, 13, 9, 0),
+    end: new Date(2025, 0, 13, 10, 30),
+    location: "Room 203",
+    createdBy: "Dr. Emily Roberts",
+    category: "counseling",
+  },
+  {
+    id: 4,
+    title: "Orientation Hub",
+    date: 14,
+    start: new Date(2025, 0, 14, 13, 0),
+    end: new Date(2025, 0, 14, 15, 0),
+    location: "Main Hall",
+    createdBy: "David Martinez",
+    category: "workshops",
+  },
+  {
+    id: 5,
+    title: "Layout Review",
+    date: 16,
+    start: new Date(2025, 0, 16, 11, 0),
+    end: new Date(2025, 0, 16, 12, 30),
+    location: "Design Studio",
+    createdBy: "Alex Kim",
+    category: "workshops",
+  },
+  {
+    id: 6,
+    title: "Service Layout",
+    date: 21,
+    start: new Date(2025, 0, 21, 15, 0),
+    end: new Date(2025, 0, 21, 17, 0),
+    location: "Community Center",
+    createdBy: "Jessica Lee",
+    category: "community",
+  },
+  {
+    id: 7,
+    title: "Participant Orientation",
+    date: 23,
+    start: new Date(2025, 0, 23, 9, 30),
+    end: new Date(2025, 0, 23, 11, 0),
+    location: "Training Room B",
+    createdBy: "Dr. Emily Roberts",
+    category: "counseling",
+  },
+  {
+    id: 8,
+    title: "Volunteering",
+    date: 23,
+    start: new Date(2025, 0, 23, 14, 0),
+    end: new Date(2025, 0, 23, 17, 0),
+    location: "Local Food Bank",
+    createdBy: "Maria Garcia",
+    category: "volunteering",
+  },
+  {
+    id: 9,
+    title: "Weekend Workshop",
+    date: 25,
+    start: new Date(2025, 0, 25, 10, 0),
+    end: new Date(2025, 0, 25, 14, 0),
+    location: "Workshop Space",
+    createdBy: "Sarah Johnson",
+    category: "workshops",
+  },
+  {
+    id: 10,
+    title: "Mentorship Call",
+    date: 28,
+    start: new Date(2025, 0, 28, 16, 0),
+    end: new Date(2025, 0, 28, 17, 0),
+    location: "Virtual (Zoom)",
+    createdBy: "James Wilson",
+    category: "counseling",
+  },
+  {
+    id: 11,
+    title: "Staff Meeting",
+    date: 31,
+    start: new Date(2025, 0, 31, 13, 0),
+    end: new Date(2025, 0, 31, 14, 30),
+    location: "Executive Boardroom",
+    createdBy: "Rachel Thompson",
+    category: "community",
+  },
 ];
 
 const categories = [
@@ -71,9 +178,46 @@ export default function Home() {
 
   const [currentMonth] = useState("January 2025");
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [meetingPoint, setMeetingPoint] = useState("");
+  const [caregivers, setCaregivers] = useState(0);
+  const [additionalNotes, setAdditionalNotes] = useState("");
 
   const handleBookingsClick = () => {
     router.push("/bookings");
+  };
+
+  const showEventPopup = (event: Event) => {
+    setSelectedEvent(event);
+    setIsModalOpen(true);
+    setMeetingPoint("");
+    setCaregivers(0);
+    setAdditionalNotes("");
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedEvent(null);
+  };
+
+  const handleSubmitApplication = () => {
+    // Handle form submission
+    console.log({
+      event: selectedEvent,
+      meetingPoint,
+      caregivers,
+      additionalNotes,
+    });
+    closeModal();
+  };
+
+  const formatTime = (date: Date) => {
+    return date.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
   };
 
   const daysOfWeek = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
@@ -303,7 +447,7 @@ export default function Home() {
                 return (
                   <div
                     key={index}
-                    className={`min-h-[120px] border-r border-b border-gray-100 p-3 cursor-pointer transition-colors ${
+                    className={`min-h-[120px] border-r border-b border-gray-100 p-3 transition-colors ${
                       !dayData.isCurrentMonth ? "bg-gray-50" : ""
                     } hover:bg-red-50 `}
                   >
@@ -323,6 +467,10 @@ export default function Home() {
                           className={`text-xs px-2 py-1 rounded border ${
                             categoryStyles[event.category]
                           } font-semibold truncate cursor-pointer hover:shadow-sm transition-shadow`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            showEventPopup(event);
+                          }}
                         >
                           {event.title}
                         </div>
@@ -335,6 +483,151 @@ export default function Home() {
           </div>
         </div>
       </main>
+
+      {/* Event Details Modal */}
+      {isModalOpen && selectedEvent && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex items-start justify-between mb-4">
+                <span
+                  className={`text-xs font-bold uppercase tracking-wider ${
+                    selectedEvent.category === "workshops"
+                      ? "text-orange-600"
+                      : selectedEvent.category === "counseling"
+                      ? "text-blue-600"
+                      : selectedEvent.category === "community"
+                      ? "text-green-600"
+                      : "text-purple-600"
+                  }`}
+                >
+                  {selectedEvent.category}
+                </span>
+                <button
+                  onClick={closeModal}
+                  className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <X className="w-5 h-5 text-gray-500" />
+                </button>
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                {selectedEvent.title}
+              </h2>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Clock className="w-4 h-4" />
+                  <span className="text-sm font-medium">
+                    {formatTime(selectedEvent.start)} -{" "}
+                    {formatTime(selectedEvent.end)}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <MapPin className="w-4 h-4" />
+                  <span className="text-sm font-medium">
+                    {selectedEvent.location}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 space-y-6">
+              {/* Meeting Point Selection */}
+              <div>
+                <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-3">
+                  Meeting Point Selection
+                </h3>
+                <div className="space-y-2">
+                  <label className="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-red-300 transition-colors">
+                    <input
+                      type="radio"
+                      name="meetingPoint"
+                      value="harbourfront"
+                      checked={meetingPoint === "harbourfront"}
+                      onChange={(e) => setMeetingPoint(e.target.value)}
+                      className="w-4 h-4 text-red-500 focus:ring-red-500"
+                    />
+                    <span className="text-sm font-medium text-gray-900">
+                      Harbourfront MRT Station
+                    </span>
+                  </label>
+                  <label className="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-red-300 transition-colors">
+                    <input
+                      type="radio"
+                      name="meetingPoint"
+                      value="vivocity"
+                      checked={meetingPoint === "vivocity"}
+                      onChange={(e) => setMeetingPoint(e.target.value)}
+                      className="w-4 h-4 text-red-500 focus:ring-red-500"
+                    />
+                    <span className="text-sm font-medium text-gray-900">
+                      Directly at VivoCity Entry
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Caregivers Attending */}
+              <div>
+                <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-3">
+                  Caregivers Attending
+                </h3>
+                <div className="grid grid-cols-4 gap-2">
+                  {[0, 1, 2, "3+"].map((num) => (
+                    <button
+                      key={num}
+                      onClick={() =>
+                        setCaregivers(typeof num === "number" ? num : 3)
+                      }
+                      className={`py-3 px-4 rounded-lg font-bold text-sm transition-colors ${
+                        caregivers === (typeof num === "number" ? num : 3)
+                          ? "bg-red-100 text-red-700 border-2 border-red-300"
+                          : "bg-gray-50 text-gray-700 border-2 border-gray-200 hover:border-gray-300"
+                      }`}
+                    >
+                      {num}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Additional Notes */}
+              <div>
+                <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-3">
+                  Additional Notes
+                </h3>
+                <textarea
+                  value={additionalNotes}
+                  onChange={(e) => setAdditionalNotes(e.target.value)}
+                  placeholder="Any special requirements..."
+                  className="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-red-300 focus:outline-none resize-none text-sm"
+                  rows={4}
+                />
+              </div>
+
+              {/* Submit Button */}
+              <button
+                onClick={handleSubmitApplication}
+                className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-4 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 uppercase tracking-wide text-sm"
+              >
+                Submit Application
+                <ArrowRight className="w-4 h-4" />
+              </button>
+
+              {/* Event Info Footer */}
+              <div className="pt-4 border-t border-gray-200">
+                <p className="text-xs text-gray-500">
+                  Created by{" "}
+                  <span className="font-semibold text-gray-700">
+                    {selectedEvent.createdBy}
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

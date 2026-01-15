@@ -1,49 +1,76 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { ChevronLeft, ChevronRight, Search, Bell, Menu, Plus, LayoutGrid, Calendar, MessageSquare, ChevronDown } from 'lucide-react';
+import { useState } from "react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Search,
+  Bell,
+  Menu,
+  Plus,
+  LayoutGrid,
+  Calendar,
+  MessageSquare,
+  ChevronDown,
+} from "lucide-react";
 
 type Event = {
   id: number;
   title: string;
   date: number;
-  category: 'workshops' | 'counseling' | 'community' | 'volunteering';
+  category: "workshops" | "counseling" | "community" | "volunteering";
 };
 
 const events: Event[] = [
-  { id: 1, title: 'Call with Coord.', date: 6, category: 'workshops' },
-  { id: 2, title: 'Community Park', date: 8, category: 'community' },
-  { id: 3, title: 'Counseling Session', date: 13, category: 'counseling' },
-  { id: 4, title: 'Orientation Hub', date: 14, category: 'workshops' },
-  { id: 5, title: 'Layout Review', date: 16, category: 'workshops' },
-  { id: 6, title: 'Service Layout', date: 21, category: 'community' },
-  { id: 7, title: 'Participant Orientation', date: 23, category: 'counseling' },
-  { id: 8, title: 'Volunteering', date: 23, category: 'volunteering' },
-  { id: 9, title: 'Weekend Workshop', date: 25, category: 'workshops' },
-  { id: 10, title: 'Mentorship Call', date: 28, category: 'counseling' },
-  { id: 11, title: 'Staff Meeting', date: 31, category: 'community' },
+  { id: 1, title: "Call with Coord.", date: 6, category: "workshops" },
+  { id: 2, title: "Community Park", date: 8, category: "community" },
+  { id: 3, title: "Counseling Session", date: 13, category: "counseling" },
+  { id: 4, title: "Orientation Hub", date: 14, category: "workshops" },
+  { id: 5, title: "Layout Review", date: 16, category: "workshops" },
+  { id: 6, title: "Service Layout", date: 21, category: "community" },
+  { id: 7, title: "Participant Orientation", date: 23, category: "counseling" },
+  { id: 8, title: "Volunteering", date: 23, category: "volunteering" },
+  { id: 9, title: "Weekend Workshop", date: 25, category: "workshops" },
+  { id: 10, title: "Mentorship Call", date: 28, category: "counseling" },
+  { id: 11, title: "Staff Meeting", date: 31, category: "community" },
 ];
 
 const categories = [
-  { name: 'Workshops', color: 'bg-orange-100 text-orange-700', dotColor: 'bg-orange-500' },
-  { name: 'Counseling', color: 'bg-blue-100 text-blue-700', dotColor: 'bg-blue-500' },
-  { name: 'Community', color: 'bg-green-100 text-green-700', dotColor: 'bg-green-500' },
-  { name: 'Volunteering', color: 'bg-purple-100 text-purple-700', dotColor: 'bg-purple-500' },
+  {
+    name: "Workshops",
+    color: "bg-orange-100 text-orange-700",
+    dotColor: "bg-orange-500",
+  },
+  {
+    name: "Counseling",
+    color: "bg-blue-100 text-blue-700",
+    dotColor: "bg-blue-500",
+  },
+  {
+    name: "Community",
+    color: "bg-green-100 text-green-700",
+    dotColor: "bg-green-500",
+  },
+  {
+    name: "Volunteering",
+    color: "bg-purple-100 text-purple-700",
+    dotColor: "bg-purple-500",
+  },
 ];
 
 const categoryStyles = {
-  workshops: 'bg-orange-100 text-orange-700 border-orange-200',
-  counseling: 'bg-blue-100 text-blue-700 border-blue-200',
-  community: 'bg-green-100 text-green-700 border-green-200',
-  volunteering: 'bg-purple-100 text-purple-700 border-purple-200',
+  workshops: "bg-orange-100 text-orange-700 border-orange-200",
+  counseling: "bg-blue-100 text-blue-700 border-blue-200",
+  community: "bg-green-100 text-green-700 border-green-200",
+  volunteering: "bg-purple-100 text-purple-700 border-purple-200",
 };
 
 export default function Home() {
-  const [currentMonth] = useState('January 2025');
+  const [currentMonth] = useState("January 2025");
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  const daysOfWeek = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
-  
+  const daysOfWeek = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+
   // January 2025 calendar data (starting with December 30, 2024 to fill the grid)
   const calendarDays = [
     { day: 30, isCurrentMonth: false },
@@ -85,19 +112,23 @@ export default function Home() {
 
   const getEventsForDay = (day: number, isCurrentMonth: boolean) => {
     if (!isCurrentMonth) return [];
-    return events.filter(event => event.date === day);
+    return events.filter((event) => event.date === day);
   };
 
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
-      <aside className={`${sidebarOpen ? 'w-64' : 'w-0'} transition-all duration-300 bg-white border-r border-gray-200 flex flex-col overflow-hidden`}>
+      <aside
+        className={`${
+          sidebarOpen ? "w-64" : "w-0"
+        } transition-all duration-300 bg-white border-r border-gray-200 flex flex-col overflow-hidden`}
+      >
         <div className="p-4 border-b border-gray-200">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
               <Calendar className="w-5 h-5 text-white" />
             </div>
-            <span className="font-bold text-lg">UnityCalendar</span>
+            <span className="font-bold text-lg text-black">PlatformOne</span>
           </div>
         </div>
 
@@ -109,7 +140,9 @@ export default function Home() {
             </div>
             <div className="flex-1">
               <div className="font-bold text-sm">Walter Sullivan</div>
-              <div className="text-xs text-gray-500 uppercase font-medium">Participant</div>
+              <div className="text-xs text-gray-500 uppercase font-medium">
+                Participant
+              </div>
             </div>
           </div>
         </div>
@@ -142,7 +175,9 @@ export default function Home() {
 
           {/* My Bookings */}
           <div className="mt-6 px-2">
-            <h3 className="text-xs font-bold text-gray-400 uppercase mb-3 tracking-wide">My Bookings</h3>
+            <h3 className="text-xs font-bold text-gray-400 uppercase mb-3 tracking-wide">
+              My Bookings
+            </h3>
             <div className="space-y-2 mb-4">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Total Booked</span>
@@ -157,12 +192,21 @@ export default function Home() {
 
           {/* Categories */}
           <div className="mt-4 px-2">
-            <h3 className="text-xs font-bold text-gray-400 uppercase mb-3 tracking-wide">Categories</h3>
+            <h3 className="text-xs font-bold text-gray-400 uppercase mb-3 tracking-wide">
+              Categories
+            </h3>
             <div className="space-y-2">
               {categories.map((category, index) => (
-                <button key={index} className="w-full flex items-center gap-3 py-2 px-2 hover:bg-gray-50 rounded-lg transition-colors">
-                  <div className={`w-3 h-3 rounded-full ${category.dotColor}`}></div>
-                  <span className="text-sm text-gray-700 font-medium">{category.name}</span>
+                <button
+                  key={index}
+                  className="w-full flex items-center gap-3 py-2 px-2 hover:bg-gray-50 rounded-lg transition-colors"
+                >
+                  <div
+                    className={`w-3 h-3 rounded-full ${category.dotColor}`}
+                  ></div>
+                  <span className="text-sm text-gray-700 font-medium">
+                    {category.name}
+                  </span>
                 </button>
               ))}
             </div>
@@ -176,7 +220,10 @@ export default function Home() {
         <header className="bg-white border-b border-gray-200 px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 hover:bg-gray-100 rounded-lg">
+              <button
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="p-2 hover:bg-gray-100 rounded-lg"
+              >
                 <Menu className="w-5 h-5" />
               </button>
               <h1 className="text-2xl font-bold">{currentMonth}</h1>
@@ -201,7 +248,9 @@ export default function Home() {
               </button>
               <button className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800">
                 <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                <span className="font-semibold uppercase text-xs tracking-wide">Unity Hub</span>
+                <span className="font-semibold uppercase text-xs tracking-wide">
+                  Unity Hub
+                </span>
                 <ChevronDown className="w-4 h-4" />
               </button>
             </div>
@@ -214,11 +263,14 @@ export default function Home() {
             {/* Days of Week Header */}
             <div className="grid grid-cols-7 border-b border-gray-200">
               {daysOfWeek.map((day, index) => {
-                const isWeekend = day === 'SAT' || day === 'SUN';
+                const isWeekend = day === "SAT" || day === "SUN";
                 return (
-                  <div key={index} className={`px-4 py-3 text-center text-xs font-bold uppercase ${
-                    isWeekend ? 'text-orange-500' : 'text-gray-500'
-                  }`}>
+                  <div
+                    key={index}
+                    className={`px-4 py-3 text-center text-xs font-bold uppercase ${
+                      isWeekend ? "text-orange-500" : "text-gray-500"
+                    }`}
+                  >
                     {day}
                   </div>
                 );
@@ -228,23 +280,29 @@ export default function Home() {
             {/* Calendar Days */}
             <div className="grid grid-cols-7">
               {calendarDays.map((dayData, index) => {
-                const dayEvents = getEventsForDay(dayData.day, dayData.isCurrentMonth);
-                const isHighlighted = dayData.day === 14 && dayData.isCurrentMonth;
-                
+                const dayEvents = getEventsForDay(
+                  dayData.day,
+                  dayData.isCurrentMonth
+                );
+
                 return (
                   <div
                     key={index}
-                    className={`min-h-[120px] border-r border-b border-gray-100 p-3 ${
-                      !dayData.isCurrentMonth ? 'bg-gray-50' : ''
-                    } ${isHighlighted ? 'bg-red-50' : ''}`}
+                    className={`min-h-[120px] border-r border-b border-gray-100 p-3 cursor-pointer transition-colors ${
+                      !dayData.isCurrentMonth ? "bg-gray-50" : ""
+                    } hover:bg-red-50 `}
                   >
-                    <div className={`text-base font-bold mb-2 ${
-                      dayData.isCurrentMonth ? 'text-gray-900' : 'text-gray-400'
-                    }`}>
+                    <div
+                      className={`text-base font-bold mb-2 ${
+                        dayData.isCurrentMonth
+                          ? "text-gray-900"
+                          : "text-gray-400"
+                      }`}
+                    >
                       {dayData.day}
                     </div>
                     <div className="space-y-1">
-                      {dayEvents.map(event => (
+                      {dayEvents.map((event) => (
                         <div
                           key={event.id}
                           className={`text-xs px-2 py-1 rounded border ${
@@ -262,11 +320,6 @@ export default function Home() {
           </div>
         </div>
       </main>
-
-      {/* Chat Button */}
-      <button className="fixed bottom-8 right-8 w-14 h-14 bg-red-500 hover:bg-red-600 text-white rounded-full shadow-lg flex items-center justify-center transition-colors">
-        <MessageSquare className="w-6 h-6" />
-      </button>
     </div>
   );
 }

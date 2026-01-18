@@ -47,16 +47,35 @@ model Question {
 }
 
 model Booking {
-  id            String      @id @default(uuid())
-  createdAt     DateTime    @default(now())
+  id            String                 @id @default(uuid())
+  createdAt     DateTime               @default(now())
   roleAtBooking BookingRole
   userId        String
   eventId       String
   answers       Answer[]
-  event         Event       @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  user          User        @relation(fields: [userId], references: [id])
+  event         Event                  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user          User                   @relation(fields: [userId], references: [id])
+  confirmations ReminderConfirmation[]
 
   @@unique([userId, eventId])
+}
+
+model ReminderConfirmation {
+  id          String             @id @default(uuid())
+  token       String             @unique
+  status      ConfirmationStatus @default(PENDING)
+  bookingId   String
+  sentAt      DateTime           @default(now())
+  respondedAt DateTime?
+  booking     Booking            @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+}
+
+enum ConfirmationStatus {
+  PENDING
+  CONFIRMED
+  DECLINED
 }
 
 model Answer {

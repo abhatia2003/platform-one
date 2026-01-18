@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutGrid, ClipboardList, Users, Plus, ShieldCheck } from "lucide-react";
+import { LayoutGrid, ClipboardList, Users, Plus, ShieldCheck, Mail } from "lucide-react";
 
 type Category = {
   name: string;
@@ -31,6 +31,7 @@ export default function Sidebar({
   const isAttendanceActive = pathname === "/staffattendance";
   const isParticipantsActive = pathname === "/staffparticipants";
   const isVolunteersActive = pathname === "/staffvolunteers";
+  const isRemindersActive = pathname === "/staffreminders";
 
   return (
     <aside
@@ -113,7 +114,7 @@ export default function Sidebar({
 
         <Link
           href="/staffvolunteers"
-          className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors mb-6 ${
+          className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors mb-1 ${
             isVolunteersActive
               ? "bg-slate-900 text-white font-semibold"
               : "text-gray-600 hover:bg-gray-50"
@@ -121,6 +122,18 @@ export default function Sidebar({
         >
           <Users className="w-5 h-5" />
           <span className="font-semibold">Manage Volunteers</span>
+        </Link>
+
+        <Link
+          href="/staffreminders"
+          className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors mb-6 ${
+            isRemindersActive
+              ? "bg-slate-900 text-white font-semibold"
+              : "text-gray-600 hover:bg-gray-50"
+          }`}
+        >
+          <Mail className="w-5 h-5" />
+          <span className="font-semibold">Send Reminders</span>
         </Link>
 
         {categories.length > 0 && (

@@ -1,6 +1,6 @@
 generator client {
-  provider      = "prisma-client-js"
-  engineType    = "library"
+  provider   = "prisma-client-js"
+  engineType = "library"
 }
 
 datasource db {
@@ -20,19 +20,19 @@ model User {
 }
 
 model Event {
-  id                    String      @id @default(uuid())
-  name                  String
-  start                 DateTime
-  end                   DateTime
-  location              String
-  minTier               LoyaltyTier
-  participantCapacity   Int         @default(25)
-  volunteerCapacity     Int         @default(5)
-  createdAt             DateTime    @default(now())
-  createdById           String
-  bookings              Booking[]
-  createdBy             User        @relation("CreatedEvents", fields: [createdById], references: [id])
-  questions             Question[]
+  id                  String      @id @default(uuid())
+  name                String
+  start               DateTime
+  end                 DateTime
+  location            String
+  minTier             LoyaltyTier
+  participantCapacity Int         @default(25)
+  volunteerCapacity   Int         @default(5)
+  createdAt           DateTime    @default(now())
+  createdById         String
+  bookings            Booking[]
+  createdBy           User        @relation("CreatedEvents", fields: [createdById], references: [id])
+  questions           Question[]
 }
 
 model Question {

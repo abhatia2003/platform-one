@@ -5,13 +5,7 @@ import Link from "next/link";
 import { Calendar, ChevronRight, Menu } from "lucide-react";
 import Sidebar from "../staff/sidebar";
 import UserDropdown from "../components/UserDropdown";
-
-const CATEGORIES = [
-  { name: "Workshops", color: "bg-orange-100 text-orange-700", dotColor: "bg-orange-500", value: "workshops" },
-  { name: "Counseling", color: "bg-blue-100 text-blue-700", dotColor: "bg-blue-500", value: "counseling" },
-  { name: "Community", color: "bg-green-100 text-green-700", dotColor: "bg-green-500", value: "community" },
-  { name: "Volunteering", color: "bg-purple-100 text-purple-700", dotColor: "bg-purple-500", value: "volunteering" },
-];
+import { CATEGORIES } from "../staff/constants";
 
 const events = [
   {

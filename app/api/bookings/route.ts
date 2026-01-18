@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { canUserBookEvent, LoyaltyTier, getTierDisplayName } from "@/lib/tierUtils";
 
 type AnswerInput = {
   questionId: string;
@@ -87,6 +88,34 @@ export async function POST(request: NextRequest) {
 
     if (!event) {
       return NextResponse.json({ error: "Event not found" }, { status: 404 });
+    }
+
+    // Fetch user to check their tier
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { tier: true, role: true },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    // Check tier eligibility (only for participants, volunteers can book any event)
+    if (roleAtBooking === "PARTICIPANT") {
+      const userTier = user.tier as LoyaltyTier | null;
+      const eventMinTier = event.minTier as LoyaltyTier;
+
+      if (!canUserBookEvent(userTier, eventMinTier)) {
+        const requiredTier = getTierDisplayName(eventMinTier);
+        const currentTier = userTier ? getTierDisplayName(userTier) : "None";
+        return NextResponse.json(
+          {
+            error: `This event requires ${requiredTier} tier or higher. Your current tier is ${currentTier}.`,
+            code: "TIER_INSUFFICIENT",
+          },
+          { status: 403 }
+        );
+      }
     }
 
     // Create booking with answers in a transaction

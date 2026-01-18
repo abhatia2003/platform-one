@@ -17,6 +17,7 @@ export const CATEGORIES: Category[] = [
   { name: "Counseling", color: "bg-blue-100 text-blue-700", dotColor: "bg-blue-500", value: "counseling" },
   { name: "Community", color: "bg-green-100 text-green-700", dotColor: "bg-green-500", value: "community" },
   { name: "Volunteering", color: "bg-purple-100 text-purple-700", dotColor: "bg-purple-500", value: "volunteering" },
+  { name: "Other", color: "bg-gray-100 text-gray-700", dotColor: "bg-gray-500", value: "default" },
 ];
 
 export const ATTENDANCE_ROWS: Attendee[] = [

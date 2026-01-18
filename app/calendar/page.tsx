@@ -15,6 +15,8 @@ import {
 import EventDetailModal from "./components/EventDetailModal";
 import UserDropdown from "../components/UserDropdown";
 import UserSidebar from "../components/UserSidebar";
+import { getEventColorClasses } from "@/lib/eventColors";
+import { LoyaltyTier } from "@/lib/tierUtils";
 
 type CalendarEvent = {
   id: string;
@@ -85,6 +87,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [viewType, setViewType] = useState<ViewType>("month");
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
+  const [userTier, setUserTier] = useState<LoyaltyTier | null>(null);
 
   useEffect(() => {
     fetchUserAndEvents();
@@ -107,7 +110,7 @@ export default function Home() {
           setUserRole(storedUserRole as "PARTICIPANT" | "VOLUNTEER");
         }
 
-        // Fetch user details from database to verify/update role
+        // Fetch user details from database to verify/update role and get tier
         try {
           const userResponse = await fetch(`/api/users/${storedUserId}`);
           if (userResponse.ok) {
@@ -117,9 +120,14 @@ export default function Home() {
               // Also update localStorage to keep it in sync
               localStorage.setItem("userRole", userData.role);
             }
+            // Set user tier
+            if (userData.tier) {
+              setUserTier(userData.tier as LoyaltyTier);
+              localStorage.setItem("userTier", userData.tier);
+            }
           }
         } catch (error) {
-          console.error("Error fetching user role:", error);
+          console.error("Error fetching user details:", error);
         }
 
         // Fetch user's bookings
@@ -346,15 +354,8 @@ export default function Home() {
     });
   };
 
-  const getCategoryColor = (eventName: string) => {
-    // Simple categorization based on event name keywords
-    const name = eventName.toLowerCase();
-    if (name.includes("workshop")) return "bg-orange-100 text-orange-700 border-orange-200";
-    if (name.includes("counseling") || name.includes("session")) return "bg-blue-100 text-blue-700 border-blue-200";
-    if (name.includes("community") || name.includes("park")) return "bg-green-100 text-green-700 border-green-200";
-    if (name.includes("volunteer")) return "bg-purple-100 text-purple-700 border-purple-200";
-    return "bg-gray-100 text-gray-700 border-gray-200"; // default
-  };
+  // Use shared color utility for consistent styling with staff view
+  const getCategoryColor = getEventColorClasses;
 
   // Helper functions for date manipulation
   const getWeekStart = (date: Date) => {
@@ -887,6 +888,7 @@ export default function Home() {
           eventId={selectedEventId}
           userId={userId}
           userRole={userRole}
+          userTier={userTier}
           onClose={handleCloseModal}
           onBookingSuccess={handleBookingSuccess}
           onUnbookSuccess={handleUnbookSuccess}

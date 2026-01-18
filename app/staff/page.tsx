@@ -15,6 +15,7 @@ import {
   ATTENDANCE_ROWS,
   MONTH_NAMES,
 } from "./constants";
+import { getCategoryFromName } from "@/lib/eventColors";
 
 export default function StaffPortalPage() {
   const router = useRouter();
@@ -67,7 +68,7 @@ export default function StaffPortalPage() {
             date: startDate.getDate(),
             month: startDate.getMonth() + 1,
             year: startDate.getFullYear(),
-            category: "workshops", // Default category - adjust based on your needs
+            category: getCategoryFromName(event.name), // Category based on event name
             location: event.location,
             time: startDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
             capacity: event.participantCapacity + event.volunteerCapacity, // Total capacity

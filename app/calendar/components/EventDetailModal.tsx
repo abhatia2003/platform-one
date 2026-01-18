@@ -1,5 +1,6 @@
-import { X } from "lucide-react";
+import { X, AlertTriangle } from "lucide-react";
 import { useState, useEffect } from "react";
+import { canUserBookEvent, getTierDisplayName, getTierColorClasses, LoyaltyTier } from "@/lib/tierUtils";
 
 type Question = {
   id: string;
@@ -25,6 +26,7 @@ type EventDetailModalProps = {
   eventId: string | null;
   userId: string;
   userRole: "PARTICIPANT" | "VOLUNTEER";
+  userTier: LoyaltyTier | null;
   onClose: () => void;
   onBookingSuccess: () => void;
   onUnbookSuccess?: () => void;
@@ -35,6 +37,7 @@ export default function EventDetailModal({
   eventId,
   userId,
   userRole,
+  userTier,
   onClose,
   onBookingSuccess,
   onUnbookSuccess,
@@ -209,9 +212,13 @@ export default function EventDetailModal({
     (booking) => booking.userId === userId
   );
 
+  // Check tier eligibility (volunteers can book any event)
+  const eventMinTier = event?.minTier as LoyaltyTier | undefined;
+  const canBook = userRole === "VOLUNTEER" || (eventMinTier ? canUserBookEvent(userTier, eventMinTier) : true);
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-white/10 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto border-black border-2">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-bold text-gray-900">Event Details</h3>
           <button
@@ -251,6 +258,26 @@ export default function EventDetailModal({
                 </p>
               </div>
             </div>
+
+            {/* Tier Restriction Warning */}
+            {!canBook && !isUserAlreadyBooked && (
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-semibold text-amber-800">
+                      Tier Requirement Not Met
+                    </p>
+                    <p className="text-xs text-amber-700 mt-1">
+                      This event requires <span className={`inline-block px-2 py-0.5 rounded font-semibold ${eventMinTier ? getTierColorClasses(eventMinTier) : ''}`}>{eventMinTier ? getTierDisplayName(eventMinTier) : 'Unknown'}</span> tier or higher.
+                    </p>
+                    <p className="text-xs text-amber-600 mt-1">
+                      Your current tier: <span className={`inline-block px-2 py-0.5 rounded font-semibold ${userTier ? getTierColorClasses(userTier) : 'bg-gray-100 text-gray-700'}`}>{userTier ? getTierDisplayName(userTier) : 'None'}</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Already Booked Message */}
             {isUserAlreadyBooked ? (
@@ -371,10 +398,10 @@ export default function EventDetailModal({
                 {/* Submit Button */}
                 <button
                   onClick={handleSubmit}
-                  disabled={submitting}
+                  disabled={submitting || !canBook}
                   className="w-full rounded-lg bg-red-500 text-white py-3 text-sm font-semibold hover:bg-red-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
                 >
-                  {submitting ? "Submitting..." : "Book This Event"}
+                  {submitting ? "Submitting..." : !canBook ? "Tier Requirement Not Met" : "Book This Event"}
                 </button>
               </>
             )}

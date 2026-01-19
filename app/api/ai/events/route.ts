@@ -508,7 +508,7 @@ export async function POST(request: NextRequest) {
           candidates,
           assistantMessage:
             "I found multiple matches. Reply with the eventId you mean:\n" +
-            candidates.map((e) => `- ${e.id}: ${e.name}`).join("\n"),
+            candidates.map((e: { id: string; name: string }) => `- ${e.id}: ${e.name}`).join("\n"),
         });
       }
 

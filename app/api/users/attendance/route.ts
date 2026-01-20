@@ -1,12 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { Prisma, UserRole } from "@prisma/client";
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const role = searchParams.get("role"); // "PARTICIPANT" or "VOLUNTEER"
+    const roleParam = searchParams.get("role"); // e.g. "PARTICIPANT" or "VOLUNTEER"
 
-    const where = role ? { role } : {};
+    // Properly typed Prisma where clause
+    const where: Prisma.UserWhereInput = {};
+
+    // Only set role filter if it matches the Prisma enum
+    if (
+      roleParam &&
+      Object.values(UserRole).includes(roleParam as UserRole)
+    ) {
+      where.role = roleParam as UserRole;
+    } else if (roleParam) {
+      // If you prefer to ignore invalid role instead of returning 400,
+      // remove this block.
+      return NextResponse.json({ error: "Invalid role" }, { status: 400 });
+    }
 
     // Fetch users with their booking counts
     const users = await prisma.user.findMany({
@@ -37,6 +51,7 @@ export async function GET(request: NextRequest) {
       email: user.email,
       role: user.role,
       tier: user.tier,
+      createdAt: user.createdAt,
       bookingCount: user.bookings.length,
       bookings: user.bookings,
     }));

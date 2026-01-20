@@ -8,7 +8,7 @@ type Category = {
   name: string;
   color: string;
   dotColor: string;
-  value: "workshops" | "counseling" | "community" | "volunteering";
+  value: "workshops" | "counseling" | "community" | "volunteering" | "other";
 };
 
 type SidebarProps = {

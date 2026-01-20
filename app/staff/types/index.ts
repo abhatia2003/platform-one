@@ -1,4 +1,4 @@
-export type CategoryValue = "workshops" | "counseling" | "community" | "volunteering";
+export type CategoryValue = "workshops" | "counseling" | "community" | "volunteering" | "other";
 
 export type Event = {
   id: number;
